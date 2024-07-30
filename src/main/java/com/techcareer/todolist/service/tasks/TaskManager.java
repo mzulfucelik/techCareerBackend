@@ -4,6 +4,7 @@ import com.techcareer.todolist.dataAccess.TaskRepository;
 import com.techcareer.todolist.dtos.requests.tasks.TaskAddRequestsDto;
 import com.techcareer.todolist.entities.Task;
 import com.techcareer.todolist.entities.enums.MissionStatus;
+import com.techcareer.todolist.exceptions.NotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -16,6 +17,11 @@ public final class TaskManager implements TaskService {
 
     public TaskManager(TaskRepository taskRepository) {
         this.taskRepository = taskRepository;
+    }
+
+    @Override
+    public List<Task> getAllByCategoryName(String categoryName) {
+       return this.taskRepository.findAllByCategoryName(categoryName);
     }
 
     @Override
@@ -38,7 +44,7 @@ public final class TaskManager implements TaskService {
     @Override
     public Task getById(Long id) {
 
-        Task task = taskRepository.findById(id).orElseThrow(()-> new RuntimeException("Aradığınız id ye göre görev bulunamadı."));
+        Task task = taskRepository.findById(id).orElseThrow(()-> new NotFoundException(id,"Görev"));
 
         return task;
     }
