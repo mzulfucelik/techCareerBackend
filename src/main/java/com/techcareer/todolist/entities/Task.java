@@ -22,8 +22,9 @@ public class Task {
     @Column(name = "task_id")
     private Long id;
 
-    @Column(name = "category_name")
-    private String categoryName;
+    @ManyToOne(targetEntity = Category.class)
+    @JoinColumn(name = "category_id")
+    private Category category;
 
     @Column(name = "title")
     private String title;
