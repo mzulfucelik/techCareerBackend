@@ -1,6 +1,7 @@
 package com.techcareer.todolist.service.tasks;
 
 import com.techcareer.todolist.dtos.requests.tasks.TaskAddRequestsDto;
+import com.techcareer.todolist.dtos.responses.tasks.TaskResponseDto;
 import com.techcareer.todolist.entities.Task;
 import com.techcareer.todolist.exceptions.NotFoundException;
 
@@ -8,12 +9,12 @@ import java.util.List;
 
 public sealed interface TaskService permits TaskManager {
 
-    List<Task> getAllByCategoryName(String categoryName);
+    List<TaskResponseDto> getAllByCategoryName(String categoryName);
     String add(TaskAddRequestsDto dto);
 
-    Task getById(Long id) throws NotFoundException;
+    TaskResponseDto getById(Long id) throws NotFoundException;
 
-    List<Task> getAll();
+    List<TaskResponseDto> getAll();
 
     void delete(Long id);
 

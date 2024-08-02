@@ -1,6 +1,7 @@
 package com.techcareer.todolist.api;
 
 import com.techcareer.todolist.dtos.requests.tasks.TaskAddRequestsDto;
+import com.techcareer.todolist.dtos.responses.tasks.TaskResponseDto;
 import com.techcareer.todolist.entities.Task;
 import com.techcareer.todolist.exceptions.NotFoundException;
 import com.techcareer.todolist.service.tasks.TaskService;
@@ -32,21 +33,21 @@ public class TaskController {
     }
 
     @GetMapping("getbyid/{id}")
-    public ResponseEntity<Task> getById(@PathVariable("id") Long id){
-        Task result = taskService.getById(id);
+    public ResponseEntity<TaskResponseDto> getById(@PathVariable("id") Long id){
+        TaskResponseDto result = taskService.getById(id);
         return ResponseEntity.status(HttpStatus.OK).body(result);
     }
 
     @GetMapping("getall")
-    public ResponseEntity<List<Task>> getAll(){
+    public ResponseEntity<List<TaskResponseDto>> getAll(){
 
-        List<Task> tasks = taskService.getAll();
+        List<TaskResponseDto> tasks = taskService.getAll();
         return ResponseEntity.status(HttpStatus.OK).body(tasks);
     }
 
     @GetMapping("getallcategory")
-    public ResponseEntity<List<Task>> getAllByCategory(@RequestParam String categoryName){
-        List<Task> tasks = taskService.getAllByCategoryName(categoryName);
+    public ResponseEntity<List<TaskResponseDto>> getAllByCategory(@RequestParam String categoryName){
+        List<TaskResponseDto> tasks = taskService.getAllByCategoryName(categoryName);
         return  ResponseEntity.status(HttpStatus.OK).body(tasks);
     }
 
