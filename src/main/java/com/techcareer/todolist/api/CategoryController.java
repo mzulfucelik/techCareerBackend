@@ -2,6 +2,7 @@ package com.techcareer.todolist.api;
 
 import com.techcareer.todolist.dtos.requests.categories.CategoryAddRequestDto;
 import com.techcareer.todolist.dtos.requests.categories.CategoryUpdateRequestDto;
+import com.techcareer.todolist.dtos.responses.categories.CategoryResponseDto;
 import com.techcareer.todolist.entities.Category;
 import com.techcareer.todolist.service.categories.CategoryService;
 import io.swagger.annotations.Api;
@@ -39,7 +40,7 @@ public class CategoryController {
     }
 
     @GetMapping("getbyid")
-    private ResponseEntity<Category> getById(@RequestParam long id){
+    private ResponseEntity<CategoryResponseDto> getById(@RequestParam long id){
 
         var result = categoryService.getById(id);
         return ResponseEntity.status(HttpStatus.OK).body(result);
@@ -47,7 +48,7 @@ public class CategoryController {
     }
 
     @GetMapping("getall")
-    private ResponseEntity<List<Category>> getAll(){
+    private ResponseEntity<List<CategoryResponseDto>> getAll(){
 
         var result = categoryService.getAllCategories();
         return ResponseEntity.status(HttpStatus.OK).body(result);

@@ -3,10 +3,12 @@ package com.techcareer.todolist.service.categories;
 import com.techcareer.todolist.dataAccess.CategoryRepository;
 import com.techcareer.todolist.dtos.requests.categories.CategoryAddRequestDto;
 import com.techcareer.todolist.dtos.requests.categories.CategoryUpdateRequestDto;
+import com.techcareer.todolist.dtos.responses.categories.CategoryResponseDto;
 import com.techcareer.todolist.entities.Category;
 import com.techcareer.todolist.exceptions.NotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -19,10 +21,11 @@ public final class CategoryManager implements CategoryService{
     }
 
     @Override
-    public Category getById(Long id) {
+    public CategoryResponseDto getById(Long id) {
         Category category = this.categoryRepository.findById(id).orElseThrow(()->new NotFoundException(id,"Kategori"));
 
-        return category;
+        CategoryResponseDto response = convertToDto(category);
+        return response;
 
     }
 
@@ -38,9 +41,23 @@ public final class CategoryManager implements CategoryService{
     }
 
     @Override
-    public List<Category> getAllCategories() {
+    public List<CategoryResponseDto> getAllCategories() {
 
-        return this.categoryRepository.findAll();
+        /*List<CategoryResponseDto> responseDtos = new ArrayList<>();
+
+        List<Category> list = this.categoryRepository.findAll();
+
+        for (Category category : list){
+            CategoryResponseDto categoryResponseDto = convertToDto(category);
+            responseDtos.add(categoryResponseDto);
+        }
+
+        return responseDtos;*/
+
+        return this.categoryRepository.findAll()
+                .stream()
+                .map(this ::convertToDto)
+                .toList();
 
     }
 
@@ -93,5 +110,10 @@ public final class CategoryManager implements CategoryService{
         category.setDescription(dto.description());
 
         return category;
+    }
+
+    private CategoryResponseDto convertToDto(Category category){
+
+        return new CategoryResponseDto(category.getId(),category.getName(),category.getDescription());
     }
 }
