@@ -4,13 +4,11 @@ import com.techcareer.todolist.dataAccess.TaskRepository;
 import com.techcareer.todolist.dtos.requests.tasks.TaskAddRequestsDto;
 import com.techcareer.todolist.dtos.responses.tasks.TaskDetailResponseDto;
 import com.techcareer.todolist.dtos.responses.tasks.TaskResponseDto;
-import com.techcareer.todolist.entities.Category;
 import com.techcareer.todolist.entities.Task;
-import com.techcareer.todolist.entities.enums.MissionStatus;
+import com.techcareer.todolist.exceptions.BusinessException;
 import com.techcareer.todolist.exceptions.NotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -18,22 +16,27 @@ import java.util.List;
 public final class TaskManager implements TaskService {
 
     private final TaskRepository taskRepository;
+    private final TaskMapper mapper;
 
-    public TaskManager(TaskRepository taskRepository) {
+    public TaskManager(TaskRepository taskRepository,TaskMapper mapper) {
         this.taskRepository = taskRepository;
+        this.mapper = mapper;
     }
 
     @Override
     public List<TaskResponseDto> getAllByCategoryName(String categoryName) {
        List<Task> tasks = this.taskRepository.findAllByCategoryName(categoryName);
 
-       return convertToDtoList(tasks);
+       return mapper.convertToDtoList(tasks);
     }
 
     @Override
     public String add(TaskAddRequestsDto dto) {
 
-        Task task = convertToEntity(dto);
+        titleMustBeUnique(dto.title());
+        taskCategoryRule(dto.categoryId());
+
+        Task task = mapper.convertToEntity(dto);
         this.taskRepository.save(task);
         return "Görev kaydedildi";
 
@@ -44,7 +47,7 @@ public final class TaskManager implements TaskService {
 
         Task task = taskRepository.findById(id).orElseThrow(()-> new NotFoundException(id,"Görev"));
 
-        return convertToDto(task);
+        return mapper.convertToDto(task);
     }
 
     @Override
@@ -52,7 +55,7 @@ public final class TaskManager implements TaskService {
 
         List<Task> tasks = this.taskRepository.findAll();
 
-        return convertToDtoList(tasks);
+        return mapper.convertToDtoList(tasks);
 
     }
 
@@ -77,74 +80,44 @@ public final class TaskManager implements TaskService {
     @Override
     public List<TaskDetailResponseDto> getAllDetails() {
         List<Task> tasks = this.taskRepository.findAll();
-        return convertToDetailDtoList(tasks);
+        return mapper.convertToDetailDtoList(tasks);
     }
 
-    private Task convertToEntity(TaskAddRequestsDto dto){
+    @Override
+    public List<TaskDetailResponseDto> getAllCategoryName(String categoryName) {
 
-        Task task = new Task();
+        List<Task> tasks = this.taskRepository.findAllByCategoryName(categoryName);
+        return mapper.convertToDetailDtoList(tasks);
 
-        Category category = new Category();
-        category.setId(dto.categoryId());
-
-        task.setCategory(category);
-        task.setTitle(dto.title());
-        task.setDescription(dto.description());
-        task.setStartDate(dto.startDate());
-        task.setEndDate(dto.endDate());
-        task.setPriority(dto.priority());
-        task.setCreateDate(new Date());
-        task.setMissionStatus(MissionStatus.IN_PROCESS);
-
-        return task;
     }
 
-    private TaskResponseDto convertToDto(Task task){
-
-        return new TaskResponseDto(
-                task.getId(),
-                task.getTitle(),
-                task.getDescription(),
-                task.getStartDate(),
-                task.getEndDate(),
-                task.getCreateDate(),
-                task.getPriority(),
-                task.getMissionStatus()
-        );
+    @Override
+    public List<TaskDetailResponseDto> getAllCategoryId(Long id) {
+        List<Task> tasks = this.taskRepository.findAllByCategory_Id(id);
+        return mapper.convertToDetailDtoList(tasks);
     }
 
-    private List<TaskResponseDto> convertToDtoList(List<Task> tasks){
+    @Override
+    public List<TaskDetailResponseDto> getAllDateRange(Date startDate, Date endDate) {
+        List<Task> tasks = this.taskRepository.findAllByStartDateBetween(startDate,endDate);
+        return mapper.convertToDetailDtoList(tasks);
+    }
 
-        List<TaskResponseDto> responseDtos = new ArrayList<>();
-        for (Task task  : tasks){
-            TaskResponseDto responseDto = convertToDto(task);
-            responseDtos.add(responseDto);
+
+    private void titleMustBeUnique(String title){
+
+        int count = this.taskRepository.countByTitle(title);
+        if (count>0){
+            throw new BusinessException("Görev Başlığı benzersiz olmalıdır :"+title);
         }
-
-        return responseDtos;
     }
 
-    private TaskDetailResponseDto convertToDetailDto(Task task){
-        return new TaskDetailResponseDto(
-                task.getId(),
-                task.getTitle(),
-                task.getDescription(),
-                task.getCategory().getName(),
-                task.getCategory().getDescription(),
-                task.getStartDate(),
-                task.getEndDate(),
-                task.getPriority(),
-                task.getMissionStatus()
-        );
-    }
-
-    private List<TaskDetailResponseDto> convertToDetailDtoList(List<Task> tasks){
-        List<TaskDetailResponseDto> responseDtos = new ArrayList<>();
-
-        for (Task task : tasks){
-            TaskDetailResponseDto dto = convertToDetailDto(task);
-            responseDtos.add(dto);
+    private void taskCategoryRule(Long categoryId){
+        int count = this.taskRepository.countByCategory_Id(categoryId);
+        if (count>0){
+            throw new BusinessException("Bir kategoriye maksimum 3 adet görev eklenebilir.");
         }
-        return responseDtos;
     }
+
+
 }

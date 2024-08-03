@@ -6,6 +6,7 @@ import com.techcareer.todolist.dtos.responses.tasks.TaskResponseDto;
 import com.techcareer.todolist.entities.Task;
 import com.techcareer.todolist.exceptions.NotFoundException;
 
+import java.util.Date;
 import java.util.List;
 
 public sealed interface TaskService permits TaskManager {
@@ -22,4 +23,8 @@ public sealed interface TaskService permits TaskManager {
     String update(Task task);
 
     List<TaskDetailResponseDto> getAllDetails();
+
+    List<TaskDetailResponseDto> getAllCategoryName(String categoryName);
+    List<TaskDetailResponseDto> getAllCategoryId(Long id);
+    List<TaskDetailResponseDto> getAllDateRange(Date startDate, Date endDate);
 }
