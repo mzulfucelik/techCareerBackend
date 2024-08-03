@@ -1,6 +1,7 @@
 package com.techcareer.todolist.service.tasks;
 
 import com.techcareer.todolist.dtos.requests.tasks.TaskAddRequestsDto;
+import com.techcareer.todolist.dtos.responses.tasks.TaskDetailResponseDto;
 import com.techcareer.todolist.dtos.responses.tasks.TaskResponseDto;
 import com.techcareer.todolist.entities.Task;
 import com.techcareer.todolist.exceptions.NotFoundException;
@@ -19,4 +20,6 @@ public sealed interface TaskService permits TaskManager {
     void delete(Long id);
 
     String update(Task task);
+
+    List<TaskDetailResponseDto> getAllDetails();
 }

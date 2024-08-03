@@ -2,6 +2,7 @@ package com.techcareer.todolist.service.tasks;
 
 import com.techcareer.todolist.dataAccess.TaskRepository;
 import com.techcareer.todolist.dtos.requests.tasks.TaskAddRequestsDto;
+import com.techcareer.todolist.dtos.responses.tasks.TaskDetailResponseDto;
 import com.techcareer.todolist.dtos.responses.tasks.TaskResponseDto;
 import com.techcareer.todolist.entities.Category;
 import com.techcareer.todolist.entities.Task;
@@ -73,6 +74,12 @@ public final class TaskManager implements TaskService {
 
     }
 
+    @Override
+    public List<TaskDetailResponseDto> getAllDetails() {
+        List<Task> tasks = this.taskRepository.findAll();
+        return convertToDetailDtoList(tasks);
+    }
+
     private Task convertToEntity(TaskAddRequestsDto dto){
 
         Task task = new Task();
@@ -114,6 +121,30 @@ public final class TaskManager implements TaskService {
             responseDtos.add(responseDto);
         }
 
+        return responseDtos;
+    }
+
+    private TaskDetailResponseDto convertToDetailDto(Task task){
+        return new TaskDetailResponseDto(
+                task.getId(),
+                task.getTitle(),
+                task.getDescription(),
+                task.getCategory().getName(),
+                task.getCategory().getDescription(),
+                task.getStartDate(),
+                task.getEndDate(),
+                task.getPriority(),
+                task.getMissionStatus()
+        );
+    }
+
+    private List<TaskDetailResponseDto> convertToDetailDtoList(List<Task> tasks){
+        List<TaskDetailResponseDto> responseDtos = new ArrayList<>();
+
+        for (Task task : tasks){
+            TaskDetailResponseDto dto = convertToDetailDto(task);
+            responseDtos.add(dto);
+        }
         return responseDtos;
     }
 }

@@ -1,6 +1,7 @@
 package com.techcareer.todolist.api;
 
 import com.techcareer.todolist.dtos.requests.tasks.TaskAddRequestsDto;
+import com.techcareer.todolist.dtos.responses.tasks.TaskDetailResponseDto;
 import com.techcareer.todolist.dtos.responses.tasks.TaskResponseDto;
 import com.techcareer.todolist.entities.Task;
 import com.techcareer.todolist.exceptions.NotFoundException;
@@ -49,6 +50,12 @@ public class TaskController {
     public ResponseEntity<List<TaskResponseDto>> getAllByCategory(@RequestParam String categoryName){
         List<TaskResponseDto> tasks = taskService.getAllByCategoryName(categoryName);
         return  ResponseEntity.status(HttpStatus.OK).body(tasks);
+    }
+
+    @GetMapping("getdetails")
+    public ResponseEntity<List<TaskDetailResponseDto>>getDetails(){
+        var result = this.taskService.getAllDetails();
+        return ResponseEntity.status(HttpStatus.OK).body(result);
     }
 
 }
