@@ -30,4 +30,27 @@ public class Category {
 
     @OneToMany(mappedBy = "category")
     private List<Task> tasks;
+
+
+    // Getter ve Setter metodları
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public Category(Long id) {
+        this.id = id;
+    }
+
 }

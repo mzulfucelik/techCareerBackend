@@ -1,6 +1,7 @@
 package com.techcareer.todolist.api;
 
 import com.techcareer.todolist.dtos.requests.tasks.TaskAddRequestsDto;
+import com.techcareer.todolist.dtos.requests.tasks.TaskUpdateRequestDto;
 import com.techcareer.todolist.dtos.responses.tasks.TaskDetailResponseDto;
 import com.techcareer.todolist.dtos.responses.tasks.TaskResponseDto;
 import com.techcareer.todolist.entities.Task;
@@ -34,6 +35,27 @@ public class TaskController {
 
         return ResponseEntity.status(HttpStatus.CREATED).body(result);
     }
+
+    @PutMapping("update/{id}")
+    public ResponseEntity<String> update(@PathVariable Long id, @Valid @RequestBody TaskUpdateRequestDto dto) {
+        try {
+            String result = taskService.update(dto);
+            return ResponseEntity.status(HttpStatus.OK).body(result);
+        } catch (NotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Görev bulunamadı.");
+        }
+    }
+
+    @DeleteMapping("delete/{id}")
+    public ResponseEntity<String> delete(@PathVariable Long id) {
+        try {
+            taskService.delete(id);
+            return ResponseEntity.status(HttpStatus.OK).body("Görev başarıyla silindi.");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Görev bulunamadı.");
+        }
+    }
+
 
     @GetMapping("getbyid/{id}")
     public ResponseEntity<TaskResponseDto> getById(@PathVariable("id") Long id){

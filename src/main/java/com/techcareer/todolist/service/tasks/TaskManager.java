@@ -2,8 +2,10 @@ package com.techcareer.todolist.service.tasks;
 
 import com.techcareer.todolist.dataAccess.TaskRepository;
 import com.techcareer.todolist.dtos.requests.tasks.TaskAddRequestsDto;
+import com.techcareer.todolist.dtos.requests.tasks.TaskUpdateRequestDto;
 import com.techcareer.todolist.dtos.responses.tasks.TaskDetailResponseDto;
 import com.techcareer.todolist.dtos.responses.tasks.TaskResponseDto;
+import com.techcareer.todolist.entities.Category;
 import com.techcareer.todolist.entities.Task;
 import com.techcareer.todolist.exceptions.BusinessException;
 import com.techcareer.todolist.exceptions.NotFoundException;
@@ -101,6 +103,23 @@ public final class TaskManager implements TaskService {
     public List<TaskDetailResponseDto> getAllDateRange(Date startDate, Date endDate) {
         List<Task> tasks = this.taskRepository.findAllByStartDateBetween(startDate,endDate);
         return mapper.convertToDetailDtoList(tasks);
+    }
+
+    @Override
+    public String update(TaskUpdateRequestDto dto) throws NotFoundException {
+        Task existingTask = taskRepository.findById(dto.id())
+                .orElseThrow(() -> new NotFoundException(dto.id(), "Task"));
+
+        existingTask.setCategory(new Category(dto.categoryId())); // Category güncellemesi
+        existingTask.setTitle(dto.title());
+        existingTask.setDescription(dto.description());
+        existingTask.setStartDate(dto.startDate());
+        existingTask.setEndDate(dto.endDate());
+        existingTask.setPriority(dto.priority());
+        existingTask.setMissionStatus(dto.missionStatus());
+
+        taskRepository.save(existingTask);
+        return "Görev başarıyla güncellendi.";
     }
 
 

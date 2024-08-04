@@ -1,5 +1,6 @@
 package com.techcareer.todolist.dtos.requests.tasks;
 
+import com.techcareer.todolist.entities.enums.MissionStatus;
 import com.techcareer.todolist.entities.enums.Priority;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
@@ -15,7 +16,8 @@ public record TaskAddRequestsDto(
         String description,
         Date startDate,
         Date endDate,
-        Priority priority
+        Priority priority,
+        MissionStatus missionStatus
 ) {
 
 }

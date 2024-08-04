@@ -1,6 +1,7 @@
 package com.techcareer.todolist.service.tasks;
 
 import com.techcareer.todolist.dtos.requests.tasks.TaskAddRequestsDto;
+import com.techcareer.todolist.dtos.requests.tasks.TaskUpdateRequestDto;
 import com.techcareer.todolist.dtos.responses.tasks.TaskDetailResponseDto;
 import com.techcareer.todolist.dtos.responses.tasks.TaskResponseDto;
 import com.techcareer.todolist.entities.Task;
@@ -27,4 +28,6 @@ public sealed interface TaskService permits TaskManager {
     List<TaskDetailResponseDto> getAllCategoryName(String categoryName);
     List<TaskDetailResponseDto> getAllCategoryId(Long id);
     List<TaskDetailResponseDto> getAllDateRange(Date startDate, Date endDate);
+
+    String update(TaskUpdateRequestDto dto) throws NotFoundException;
 }
