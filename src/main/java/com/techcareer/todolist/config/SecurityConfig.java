@@ -16,10 +16,10 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-                .csrf(csrf -> csrf.disable())  // CSRF korumasını devre dışı bırak
+                .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .anyRequest().authenticated())  // Tüm isteklerin doğrulanmasını gerektir
-                .httpBasic(withDefaults());  // HTTP Basic kimlik doğrulamasını etkinleştir
+                        .anyRequest().authenticated())
+                .httpBasic(withDefaults());
 
         return http.build();
     }
