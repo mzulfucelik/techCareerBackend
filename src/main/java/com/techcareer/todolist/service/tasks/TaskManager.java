@@ -35,7 +35,7 @@ public final class TaskManager implements TaskService {
     @Override
     public String add(TaskAddRequestsDto dto) {
 
-        titleMustBeUnique(dto.title());
+        //titleMustBeUnique(dto.title());
         //taskCategoryRule(dto.categoryId());
 
         Task task = mapper.convertToEntity(dto);
@@ -110,7 +110,7 @@ public final class TaskManager implements TaskService {
         Task existingTask = taskRepository.findById(dto.id())
                 .orElseThrow(() -> new NotFoundException(dto.id(), "Task"));
 
-        existingTask.setCategory(new Category(dto.categoryId())); // Category güncellemesi
+        existingTask.setCategory(new Category(dto.categoryId()));
         existingTask.setTitle(dto.title());
         existingTask.setDescription(dto.description());
         existingTask.setStartDate(dto.startDate());
@@ -123,13 +123,13 @@ public final class TaskManager implements TaskService {
     }
 
 
-    private void titleMustBeUnique(String title){
+    /*private void titleMustBeUnique(String title){
 
         int count = this.taskRepository.countByTitle(title);
         if (count>0){
             throw new BusinessException("Görev Başlığı benzersiz olmalıdır :"+title);
         }
-    }
+    }*/
 
     /*private void taskCategoryRule(Long categoryId){
         int count = this.taskRepository.countByCategory_Id(categoryId);
