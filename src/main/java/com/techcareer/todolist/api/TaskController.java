@@ -5,6 +5,7 @@ import com.techcareer.todolist.dtos.requests.tasks.TaskUpdateRequestDto;
 import com.techcareer.todolist.dtos.responses.tasks.TaskDetailResponseDto;
 import com.techcareer.todolist.dtos.responses.tasks.TaskResponseDto;
 import com.techcareer.todolist.entities.Task;
+import com.techcareer.todolist.entities.enums.MissionStatus;
 import com.techcareer.todolist.exceptions.NotFoundException;
 import com.techcareer.todolist.service.tasks.TaskService;
 import io.swagger.annotations.Api;
@@ -56,13 +57,6 @@ public class TaskController {
         }
     }
 
-
-    @GetMapping("getbyid/{id}")
-    public ResponseEntity<TaskResponseDto> getById(@PathVariable("id") Long id){
-        TaskResponseDto result = taskService.getById(id);
-        return ResponseEntity.status(HttpStatus.OK).body(result);
-    }
-
     @GetMapping("getall")
     public ResponseEntity<List<TaskResponseDto>> getAll(){
 
@@ -70,10 +64,30 @@ public class TaskController {
         return ResponseEntity.status(HttpStatus.OK).body(tasks);
     }
 
-    @GetMapping("getallcategory")
+    @GetMapping("getdone")
+    public ResponseEntity<List<TaskResponseDto>> getDoneTasks() {
+        List<TaskResponseDto> tasks = taskService.getAllByStatus(MissionStatus.DONE);
+        return ResponseEntity.status(HttpStatus.OK).body(tasks);
+    }
+
+    @GetMapping("gettodo")
+    public ResponseEntity<List<TaskResponseDto>> getTodoTasks() {
+        List<TaskResponseDto> tasks = taskService.getAllByStatus(MissionStatus.IN_PROCESS);
+        return ResponseEntity.status(HttpStatus.OK).body(tasks);
+    }
+
+
+
+    /*@GetMapping("getallcategory")
     public ResponseEntity<List<TaskResponseDto>> getAllByCategory(@RequestParam String categoryName){
         List<TaskResponseDto> tasks = taskService.getAllByCategoryName(categoryName);
         return  ResponseEntity.status(HttpStatus.OK).body(tasks);
+    }
+
+    @GetMapping("getbyid/{id}")
+    public ResponseEntity<TaskResponseDto> getById(@PathVariable("id") Long id){
+        TaskResponseDto result = taskService.getById(id);
+        return ResponseEntity.status(HttpStatus.OK).body(result);
     }
 
     @GetMapping("getdetails")
@@ -94,5 +108,5 @@ public class TaskController {
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date end){
         List<TaskDetailResponseDto> tasks = taskService.getAllDateRange(start,end);
         return ResponseEntity.status(HttpStatus.OK).body(tasks);
-    }
+    }*/
 }

@@ -7,6 +7,7 @@ import com.techcareer.todolist.dtos.responses.tasks.TaskDetailResponseDto;
 import com.techcareer.todolist.dtos.responses.tasks.TaskResponseDto;
 import com.techcareer.todolist.entities.Category;
 import com.techcareer.todolist.entities.Task;
+import com.techcareer.todolist.entities.enums.MissionStatus;
 import com.techcareer.todolist.exceptions.BusinessException;
 import com.techcareer.todolist.exceptions.NotFoundException;
 import org.springframework.stereotype.Service;
@@ -121,6 +122,13 @@ public final class TaskManager implements TaskService {
         taskRepository.save(existingTask);
         return "Görev başarıyla güncellendi.";
     }
+
+    @Override
+    public List<TaskResponseDto> getAllByStatus(MissionStatus status) {
+        List<Task> tasks = taskRepository.findAllByMissionStatus(status);
+        return mapper.convertToDtoList(tasks);
+    }
+
 
 
     /*private void titleMustBeUnique(String title){

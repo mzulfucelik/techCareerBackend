@@ -5,6 +5,7 @@ import com.techcareer.todolist.dtos.requests.tasks.TaskUpdateRequestDto;
 import com.techcareer.todolist.dtos.responses.tasks.TaskDetailResponseDto;
 import com.techcareer.todolist.dtos.responses.tasks.TaskResponseDto;
 import com.techcareer.todolist.entities.Task;
+import com.techcareer.todolist.entities.enums.MissionStatus;
 import com.techcareer.todolist.exceptions.NotFoundException;
 
 import java.util.Date;
@@ -28,6 +29,8 @@ public sealed interface TaskService permits TaskManager {
     List<TaskDetailResponseDto> getAllCategoryName(String categoryName);
     List<TaskDetailResponseDto> getAllCategoryId(Long id);
     List<TaskDetailResponseDto> getAllDateRange(Date startDate, Date endDate);
+
+    List<TaskResponseDto> getAllByStatus(MissionStatus status);
 
     String update(TaskUpdateRequestDto dto) throws NotFoundException;
 }
