@@ -36,7 +36,7 @@ public final class TaskManager implements TaskService {
     public String add(TaskAddRequestsDto dto) {
 
         titleMustBeUnique(dto.title());
-        taskCategoryRule(dto.categoryId());
+        //taskCategoryRule(dto.categoryId());
 
         Task task = mapper.convertToEntity(dto);
         this.taskRepository.save(task);
@@ -131,12 +131,12 @@ public final class TaskManager implements TaskService {
         }
     }
 
-    private void taskCategoryRule(Long categoryId){
+    /*private void taskCategoryRule(Long categoryId){
         int count = this.taskRepository.countByCategory_Id(categoryId);
         if (count>0){
             throw new BusinessException("Bir kategoriye maksimum 3 adet görev eklenebilir.");
         }
-    }
+    }*/
 
 
 }
